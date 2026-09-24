@@ -158,6 +158,109 @@
   <main>
     <!-- ================= HERO SECTION ================= -->
     <section id="beranda" class="hero-section">
+      <!-- Ambient Airplane Flight Corridor -->
+      <div class="hero-sky-airspace" id="hero-airspace" aria-hidden="true">
+        <!-- Interactive Flight Radar Badge -->
+        <div class="flight-radar-badge" id="flight-radar-btn" role="button" tabindex="0" title="Klik untuk meluncurkan pesawat terbang!">
+          <span class="radar-ping"></span>
+          <i class="fa-solid fa-plane-departure text-cyan flight-icon"></i>
+          <div class="radar-info">
+            <span class="flight-code font-mono">FLIGHT NHI-777</span>
+            <span class="flight-status font-mono">AIRBORNE • FL380</span>
+          </div>
+          <span class="radar-action-hint font-mono">LAUNCH ✈️</span>
+        </div>
+
+        <!-- Animated Airplane Unit -->
+        <div class="airplane-carrier" id="hero-airplane">
+          <div class="airplane-body-wrap">
+            <!-- Jet Contrail Smoke Trails -->
+            <div class="jet-contrail contrail-left">
+              <span class="contrail-glow"></span>
+              <span class="contrail-smoke"></span>
+            </div>
+            <div class="jet-contrail contrail-right">
+              <span class="contrail-glow"></span>
+              <span class="contrail-smoke"></span>
+            </div>
+
+            <!-- Sleek Modern Jet SVG -->
+            <svg class="airplane-svg" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="jetBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ffffff" />
+                  <stop offset="40%" stop-color="#e2e8f0" />
+                  <stop offset="85%" stop-color="#94a3b8" />
+                  <stop offset="100%" stop-color="#00f0ff" />
+                </linearGradient>
+                <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#cbd5e1" />
+                  <stop offset="100%" stop-color="#334155" />
+                </linearGradient>
+                <linearGradient id="glassCockpit" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#00f0ff" />
+                  <stop offset="100%" stop-color="#0284c7" />
+                </linearGradient>
+                <filter id="jetThrustGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+                </filter>
+              </defs>
+
+              <!-- Main Fuselage Body -->
+              <path d="M152 45 C145 40 115 36 75 37 C40 38 18 42 10 44 C8 44.5 8 45.5 10 46 C18 48 40 52 75 53 C115 54 145 50 152 45 Z" fill="url(#jetBodyGrad)" />
+              
+              <!-- Cockpit Glass Window -->
+              <path d="M142 43 C138 41 128 41 123 42 C126 44 135 45 140 45 Z" fill="url(#glassCockpit)" opacity="0.9" />
+
+              <!-- Swept Wings -->
+              <!-- Top / Left Wing -->
+              <path d="M85 37 L50 8 C46 5 42 6 43 10 L58 37 Z" fill="url(#wingGrad)" />
+              <!-- Wingtip Winglet Top -->
+              <path d="M50 8 L48 3 L45 7 Z" fill="#00f0ff" />
+              <!-- Bottom / Right Wing -->
+              <path d="M85 53 L50 82 C46 85 42 84 43 80 L58 53 Z" fill="url(#wingGrad)" />
+              <!-- Wingtip Winglet Bottom -->
+              <path d="M50 82 L48 87 L45 83 Z" fill="#00ffcc" />
+
+              <!-- Vertical Tail Stabilizer / Fin -->
+              <path d="M22 45 L10 22 C9 19 6 20 7 23 L14 45 Z" fill="#38bdf8" />
+              <!-- Horizontal Stabilizers -->
+              <path d="M20 44 L8 34 C6 33 5 35 6 36 L16 45 Z" fill="#64748b" />
+              <path d="M20 46 L8 56 C6 57 5 55 6 54 L16 45 Z" fill="#64748b" />
+
+              <!-- Cabin Windows Strip -->
+              <circle cx="115" cy="45" r="1.5" fill="#00f0ff" />
+              <circle cx="107" cy="45" r="1.5" fill="#00f0ff" />
+              <circle cx="99" cy="45" r="1.5" fill="#00f0ff" />
+              <circle cx="91" cy="45" r="1.5" fill="#00f0ff" />
+              <circle cx="83" cy="45" r="1.5" fill="#00f0ff" />
+              <circle cx="75" cy="45" r="1.5" fill="#00f0ff" />
+              <circle cx="67" cy="45" r="1.5" fill="#00f0ff" />
+
+              <!-- Jet Engines Under Wings -->
+              <!-- Left Engine -->
+              <rect x="58" y="27" width="18" height="6" rx="3" fill="#1e293b" stroke="#38bdf8" stroke-width="0.8" />
+              <!-- Right Engine -->
+              <rect x="58" y="57" width="18" height="6" rx="3" fill="#1e293b" stroke="#38bdf8" stroke-width="0.8" />
+
+              <!-- Jet Engine Plasma Afterburner Exhaust Glow -->
+              <ellipse cx="56" cy="30" rx="5" ry="3" fill="#ff7700" filter="url(#jetThrustGlow)" />
+              <ellipse cx="57" cy="30" rx="3" ry="1.8" fill="#ffd700" />
+              <ellipse cx="56" cy="60" rx="5" ry="3" fill="#ff7700" filter="url(#jetThrustGlow)" />
+              <ellipse cx="57" cy="60" rx="3" ry="1.8" fill="#ffd700" />
+
+              <!-- Strobe Navigation Lights (Blinking) -->
+              <!-- Starboard (Green) -->
+              <circle cx="48" cy="86" r="2.5" fill="#22c55e" class="nav-light-green" />
+              <!-- Port (Red) -->
+              <circle cx="48" cy="4" r="2.5" fill="#ef4444" class="nav-light-red" />
+              <!-- Fuselage Beacon (White Strobe) -->
+              <circle cx="85" cy="45" r="2" fill="#ffffff" class="nav-beacon-strobe" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
       <div class="container hero-container">
         <!-- Hero Text Column -->
         <div class="hero-text-col reveal-on-scroll">
@@ -229,35 +332,58 @@
         <!-- Hero Visual & Interactive Music Player Column -->
         <div class="hero-visual-col reveal-on-scroll">
           
-          <!-- 3D Parallax Tilt Profile Card -->
+          <!-- 3D Parallax Tilt Profile Card with Luxury Fire Flame Effect -->
           <div class="hero-tilt-card-wrapper" id="hero-tilt-card">
+            <!-- Fire Flame Glow Layers -->
+            <div class="fire-aura-outer"></div>
+            <div class="fire-aura-conic"></div>
+            <div class="fire-flame-tongues" aria-hidden="true">
+              <span class="flame-tongue t-1"></span>
+              <span class="flame-tongue t-2"></span>
+              <span class="flame-tongue t-3"></span>
+              <span class="flame-tongue t-4"></span>
+              <span class="flame-tongue t-5"></span>
+              <span class="flame-tongue t-6"></span>
+              <span class="flame-tongue t-7"></span>
+            </div>
+
+            <!-- Canvas for Realtime Fiery Floating Embers -->
+            <canvas class="fire-embers-canvas" id="fire-embers-canvas"></canvas>
+
             <div class="orbit-ring orbit-ring-1"></div>
             <div class="orbit-ring orbit-ring-2"></div>
             <div class="tilt-card-neon-glow"></div>
             
-            <div class="glass-card-premium hero-profile-card">
+            <div class="glass-card-premium hero-profile-card fire-card-enhanced">
               <div class="card-glare-overlay"></div>
+              
+              <!-- Fiery Border Plasma Shimmer -->
+              <div class="fire-border-plasma"></div>
+
               <div class="profile-img-container">
                 <img src="assets/profile.jpg" alt="Foto Profil Nuh Hasif Iftihar" class="hero-avatar-img" />
+                
+                <!-- Inner Fire Heat Glow & Ambient Flame Highlights -->
+                <div class="fire-inner-heatglow"></div>
                 <div class="profile-gradient-shadow"></div>
                 
                 <div class="profile-bottom-tag">
                   <div class="profile-status-info">
-                    <span class="live-dot-green"></span>
+                    <span class="live-dot-fire"></span>
                     <div>
                       <p class="profile-name-tag font-display">Nuh Hasif Iftihar</p>
                       <p class="profile-role-tag font-mono">Web Developer • RPL</p>
                     </div>
                   </div>
-                  <span class="school-country-badge">SMK TELKOM 🇮🇩</span>
+                  <span class="school-country-badge fire-pill-badge">SMK TELKOM 🔥</span>
                 </div>
               </div>
             </div>
 
-            <!-- Floating Tech Badges -->
-            <div class="float-badge badge-top-right">
-              <i class="fa-solid fa-bolt text-yellow animate-bounce"></i>
-              <span>60 FPS SMOOTH</span>
+            <!-- Floating Tech & Fire Badges -->
+            <div class="float-badge badge-top-right fire-theme-badge">
+              <i class="fa-solid fa-fire-flame-curved text-orange animate-fire-pulse"></i>
+              <span>LUXURY FIRE AURA</span>
             </div>
             <div class="float-badge badge-bottom-left">
               <i class="fa-solid fa-sparkles text-cyan animate-spin-slow"></i>

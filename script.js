@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initTypingEffect();
   initCounterStats();
   initHeroTilt();
+  initHeroFireEmbers();
+  initHeroAirplaneFlight();
   initLofiAudioPlayer();
   initFilters();
   initProjectModals();
@@ -995,4 +997,280 @@ function initScrollReveal() {
   });
 
   revealElements.forEach(el => observer.observe(el));
+}
+
+/* ================= 15. HERO FIRE FLAME EMBERS ENGINE ================= */
+function initHeroFireEmbers() {
+  const canvas = document.getElementById('fire-embers-canvas');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  let width = 0;
+  let height = 0;
+  let particles = [];
+  const maxParticles = 45;
+
+  const colors = [
+    '#ffffff', // Core spark white
+    '#fff07a', // Bright yellow
+    '#ffaa00', // Fiery amber
+    '#ff5500', // Flaming orange
+    '#ff2200', // Deep red flame
+    '#00f0ff'  // Oceanic plasma flame accent
+  ];
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    width = canvas.width = rect.width * (window.devicePixelRatio || 1);
+    height = canvas.height = rect.height * (window.devicePixelRatio || 1);
+    ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  class EmberParticle {
+    constructor(isBurst = false, burstX = null, burstY = null) {
+      this.reset(isBurst, burstX, burstY);
+    }
+
+    reset(isBurst = false, burstX = null, burstY = null) {
+      const displayW = canvas.offsetWidth || 400;
+      const displayH = canvas.offsetHeight || 500;
+
+      if (isBurst && burstX !== null && burstY !== null) {
+        this.x = burstX + (Math.random() - 0.5) * 40;
+        this.y = burstY + (Math.random() - 0.5) * 40;
+        this.vx = (Math.random() - 0.5) * 2.5;
+        this.vy = -(Math.random() * 3.5 + 1.5);
+        this.life = 0;
+        this.maxLife = Math.random() * 45 + 30;
+      } else {
+        // Spawn along the bottom & lower flanks of the photo card
+        const spawnSide = Math.random();
+        if (spawnSide < 0.7) {
+          // Bottom area
+          this.x = displayW * 0.15 + Math.random() * (displayW * 0.7);
+          this.y = displayH * 0.85 + Math.random() * (displayH * 0.15);
+        } else if (spawnSide < 0.85) {
+          // Left flank
+          this.x = displayW * 0.1 + Math.random() * 25;
+          this.y = displayH * 0.4 + Math.random() * (displayH * 0.5);
+        } else {
+          // Right flank
+          this.x = displayW * 0.85 + Math.random() * 25;
+          this.y = displayH * 0.4 + Math.random() * (displayH * 0.5);
+        }
+
+        this.vx = (Math.random() - 0.5) * 0.8;
+        this.vy = -(Math.random() * 1.8 + 0.8);
+        this.life = 0;
+        this.maxLife = Math.random() * 70 + 50;
+      }
+
+      this.radius = Math.random() * 2.2 + 1.0;
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.baseOpacity = Math.random() * 0.6 + 0.4;
+      this.swaySpeed = Math.random() * 0.08 + 0.03;
+      this.swayAmp = Math.random() * 1.2 + 0.5;
+      this.angle = Math.random() * Math.PI * 2;
+    }
+
+    update() {
+      this.life++;
+      this.angle += this.swaySpeed;
+      this.x += this.vx + Math.sin(this.angle) * this.swayAmp * 0.35;
+      this.y += this.vy;
+
+      // Slight shrinkage as ember burns out
+      if (this.radius > 0.4) {
+        this.radius -= 0.012;
+      }
+
+      if (this.life >= this.maxLife || this.y < -10) {
+        this.reset();
+      }
+    }
+
+    draw(context) {
+      const progress = this.life / this.maxLife;
+      const alpha = this.baseOpacity * (1 - progress);
+
+      context.save();
+      context.globalAlpha = Math.max(0, Math.min(1, alpha));
+      context.fillStyle = this.color;
+      context.shadowColor = this.color;
+      context.shadowBlur = this.radius * 3.5;
+
+      context.beginPath();
+      context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      context.fill();
+      context.restore();
+    }
+  }
+
+  // Populate initial embers
+  for (let i = 0; i < maxParticles; i++) {
+    const p = new EmberParticle();
+    // Stagger initial progress
+    p.life = Math.floor(Math.random() * p.maxLife);
+    p.y -= Math.random() * 180;
+    particles.push(p);
+  }
+
+  // Card interaction - Ember flare on mouse movement
+  const cardWrapper = document.getElementById('hero-tilt-card');
+  if (cardWrapper) {
+    cardWrapper.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      if (particles.length < maxParticles + 25) {
+        for (let j = 0; j < 3; j++) {
+          particles.push(new EmberParticle(true, mx, my));
+        }
+      }
+    });
+
+    cardWrapper.addEventListener('mouseenter', () => {
+      for (let j = 0; j < 12; j++) {
+        const displayW = canvas.offsetWidth || 400;
+        const displayH = canvas.offsetHeight || 500;
+        particles.push(new EmberParticle(true, displayW * 0.5, displayH * 0.8));
+      }
+    });
+  }
+
+  // Animation Loop
+  function renderEmbers() {
+    const displayW = canvas.offsetWidth || 400;
+    const displayH = canvas.offsetHeight || 500;
+    ctx.clearRect(0, 0, displayW, displayH);
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.update();
+      p.draw(ctx);
+
+      // Remove excess burst particles when expired
+      if (particles.length > maxParticles && p.life >= p.maxLife) {
+        particles.splice(i, 1);
+      }
+    }
+
+    requestAnimationFrame(renderEmbers);
+  }
+
+  requestAnimationFrame(renderEmbers);
+}
+
+/* ================= 16. HERO AIRPLANE FLIGHT & RADAR SYSTEM ================= */
+function initHeroAirplaneFlight() {
+  const airplane = document.getElementById('hero-airplane');
+  const radarBtn = document.getElementById('flight-radar-btn');
+  if (!airplane && !radarBtn) return;
+
+  const flightStatusEl = radarBtn?.querySelector('.flight-status');
+  const flightCodeEl = radarBtn?.querySelector('.flight-code');
+  let isSupersonic = false;
+
+  // Web Audio Synth for Jet Sound Effect (Gentle whoosh)
+  function playJetFlybySound() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+
+      // Buffer noise source for jet turbine rush
+      const bufferSize = ctx.sampleRate * 2.5;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * 0.25;
+      }
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      // Bandpass filter to simulate turbine rushing wind
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(320, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(1400, ctx.currentTime + 1.2);
+      filter.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 2.5);
+      filter.Q.value = 3.0;
+
+      // Gain Envelope
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.001, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 1.0);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.4);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      noise.start();
+      noise.stop(ctx.currentTime + 2.5);
+    } catch (err) {
+      // Audio context policy safe fallback
+    }
+  }
+
+  function triggerSupersonicFlight() {
+    if (isSupersonic || !airplane) return;
+    isSupersonic = true;
+
+    // Trigger Jet Engine Sound
+    playJetFlybySound();
+
+    // Restart animation with supersonic speed
+    airplane.classList.remove('supersonic-flyby');
+    void airplane.offsetWidth; // Force reflow
+    airplane.classList.add('supersonic-flyby');
+
+    if (flightStatusEl) {
+      flightStatusEl.textContent = 'SUPERSONIC • MACH 2.5 🔥';
+      flightStatusEl.style.color = '#ffaa00';
+    }
+    if (flightCodeEl) {
+      flightCodeEl.textContent = 'FLIGHT NHI-SPEED';
+    }
+    if (radarBtn) {
+      radarBtn.style.borderColor = '#ffaa00';
+      radarBtn.style.boxShadow = '0 0 35px rgba(255, 170, 0, 0.6)';
+    }
+
+    if (typeof showToast === 'function') {
+      showToast('✈️ Pesawat supersonik NHI meluncur di atas langit hero!');
+    }
+
+    setTimeout(() => {
+      airplane.classList.remove('supersonic-flyby');
+      isSupersonic = false;
+      if (flightStatusEl) {
+        flightStatusEl.textContent = 'AIRBORNE • FL380';
+        flightStatusEl.style.color = 'var(--primary)';
+      }
+      if (flightCodeEl) {
+        flightCodeEl.textContent = 'FLIGHT NHI-777';
+      }
+      if (radarBtn) {
+        radarBtn.style.borderColor = 'rgba(0, 240, 255, 0.35)';
+        radarBtn.style.boxShadow = '0 0 25px rgba(0, 240, 255, 0.2)';
+      }
+    }, 4500);
+  }
+
+  // Event Listeners
+  radarBtn?.addEventListener('click', triggerSupersonicFlight);
+  radarBtn?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      triggerSupersonicFlight();
+    }
+  });
+
+  airplane?.addEventListener('click', triggerSupersonicFlight);
 }
